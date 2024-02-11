@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pysmartdl"
+version = "2.0.0"
+authors = [
+  { name="Adam Krajewski", email="ak@psu.edu" },
+    { name="Itay Brandes", email="brandes.itay+pysmartdl@gmail.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: Public Domain",
+    "Operating System :: OS Independent",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+description = "A Smart Download Manager for Python"
+readme = "README.md"
+
+requires-python = ">=3.8"
+dependencies = [
+]
+
+[project.optional-dependencies]
+tests = [
+    "pytest",
+    "pytest-cov",
+    "codecov"
+]
+
+[project.urls]
+homepage = "https://github.com/amkrajewski/pySmartDL"
+repository = "https://github.com/amkrajewski/pySmartDL"
+"Bug Tracker" = "https://github.com/amkrajewski/pySmartDL/issues"
+"ForkedFrom" = "https://github.com/iTaybb/pySmartDL"
