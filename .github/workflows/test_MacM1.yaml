@@ -1,4 +1,4 @@
-name: Mac M1 CI Python 3.10 - 3.13
+name: Mac M1 CI Python 3.10-13
 
 on: [push]
 
