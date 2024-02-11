@@ -182,15 +182,20 @@ class TestSmartDL(unittest.TestCase):
         self.assertTrue(obj.isSuccessful())
 
     def test_utils(self):
-        self.assertEqual(pySmartDL.utils.progress_bar(0.6, length=42), '[########################----------------]')
-        self.assertEqual(pySmartDL.utils.sizeof_human(175799789), '167.7 MB')
-        self.assertEqual(pySmartDL.utils.sizeof_human(0), '0 bytes')
-        self.assertEqual(pySmartDL.utils.time_human(50), '50 seconds')
-        self.assertEqual(pySmartDL.utils.time_human(50, fmt_short=True), '50s')
-        self.assertEqual(pySmartDL.utils.time_human(0, fmt_short=True), '0s')
-        self._test_calc_chunk_size(10000, 10, 20)
-        self._test_calc_chunk_size(1906023034, 20, 20)
-        self._test_calc_chunk_size(261969919, 20, 32)
+        """-->Testing the utility functions:"""
+        with self.subTest("Progress bar rendering"):
+            self.assertEqual(pySmartDL.utils.progress_bar(0.6, length=42), '[########################----------------]')
+        with self.subTest("Size formatting"):
+            self.assertEqual(pySmartDL.utils.sizeof_human(175799789), '167.7 MB')
+            self.assertEqual(pySmartDL.utils.sizeof_human(0), '0 bytes')
+        with self.subTest("Time formatting"):
+            self.assertEqual(pySmartDL.utils.time_human(50), '50 seconds')
+            self.assertEqual(pySmartDL.utils.time_human(50, fmt_short=True), '50s')
+            self.assertEqual(pySmartDL.utils.time_human(0, fmt_short=True), '0s')
+        with self.subTest("Chunk size calculation"):
+            self._test_calc_chunk_size(10000, 10, 20)
+            self._test_calc_chunk_size(1906023034, 20, 20)
+            self._test_calc_chunk_size(261969919, 20, 32)
 
     def _test_calc_chunk_size(self, filesize, threads, minChunkFile):
         chunks = pySmartDL.utils.calc_chunk_size(filesize, threads, 20)
