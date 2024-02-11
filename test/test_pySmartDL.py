@@ -224,9 +224,5 @@ class TestSmartDL(unittest.TestCase):
             
         self.assertEqual(chunks[-1][1], filesize-1)
 
-def test_suite():
-    suite = unittest.makeSuite(TestSmartDL)
-    return suite
-
 if __name__ == '__main__':
-    unittest.main(verbosity=2)
+    unittest.main(verbosity=3)
