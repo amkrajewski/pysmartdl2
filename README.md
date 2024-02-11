@@ -1,64 +1,59 @@
-Python Smart Download Manager -- pySmartDL
-==========================================
+# pySmartDL 
+
+This software is a fork of the pySmartDL or **Python Smart Download Manager**, which appears to not be maintained anymore. I (1) went through its codebase to check if things work as expected in modern (Python 3.8-12) versions of Python, (2) did some modernizing fixes here and there, and (3) implemented test suites. These test suites go over currently popular Python version on four platforms: Linux (Ubuntu), MacOs (Intel CPU), MacOs (M1 CPU), and Windows.
 
 [![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Linux.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Linux.yaml)
+
 [![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacM1.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacM1.yaml)
+
 [![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacIntel.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacIntel.yaml)
+
 [![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Windows.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Windows.yaml)
 
-``pySmartDL`` strives to be a full-fledged smart download manager for Python. Main features:
+Per the original README, `pySmartDL` strives to be a full-fledged smart download manager for Python. Main features:
 
-* Built-in download acceleration (with the `multipart downloading technique <http://stackoverflow.com/questions/93642/how-do-download-accelerators-work>`_).
+* Built-in download acceleration (with the [multipart downloading technique](http://stackoverflow.com/questions/93642/how-do-download-accelerators-work)).
 * Mirrors support.
 * Pause/Unpause feature.
 * Speed limiting feature.
 * Hash checking.
-* Non-blocking, shows progress bar, download speed and eta.
+* Non-blocking, shows the progress bar, download speed and ETA.
 * Full support for custom headers and methods.
-* Python 3 Support
 
-Project Links
-=============
-
- * Downloads: http://pypi.python.org/pypi/pySmartDL/
- * Documentation: http://itaybb.github.io/pySmartDL/
- * Project page: https://github.com/iTaybb/pySmartDL/
- * Bugs and Issues: https://github.com/iTaybb/pySmartDL/issues
  
-Installation
-============
+## Installation
 
-**Using pip (recommended way)**
+You can install `pySmartDL` from PyPI through `pip`, with a simple:
 
-    Make sure python-pip is installed on you system. If you are using virtualenv, then pip is alredy installed into environments created by virtualenv. Run pip to install pySmartDL:
+```cmd
+pip install pySmartDL
+```
 
-    ``pip install pySmartDL``
+Or you can install from the source in _editable_ mode, by cloning this repository and:
 
-**From Source**
-
-    The pySmartDL package is installed from source using distutils in the usual way.  Download the `source distribution <http://pypi.python.org/pypi/pySmartDL>`_ first.  Unpack the source zip and run the following to install the package site-wide:
-
-    ``python setup.py install``
+```cmd
+pip install -e .
+```
  
-Usage
-=====
+## Usage
 
-Download is as simple as creating an instance and starting it:
+Downloading is as simple as creating an instance and starting it:
 
-	from pySmartDL import SmartDL
+```python
+from pySmartDL import SmartDL
 
-	url = "https://github.com/iTaybb/pySmartDL/raw/master/test/7za920.zip"
-	dest = "C:\\Downloads\\" # or '~/Downloads/' on linux
+url = "https://raw.githubusercontent.com/amkrajewski/pySmartDL/master/test/7za920.zip"
+dest = "."  # <-- To download to current directory 
+            # or '~/Downloads/' for Downloads directory on Linux
+            # or "C:\\Downloads\\" for Downloads directory on Windows
 
-	obj = SmartDL(url, dest)
-	obj.start()
-	# [*] 0.23 Mb / 0.37 Mb @ 88.00Kb/s [##########--------] [60%, 2s left]
+obj = SmartDL(url, dest)
+obj.start()
+# [*] 0.23 Mb / 0.37 Mb @ 88.00Kb/s [##########--------] [60%, 2s left]
 
-	path = obj.get_dest()
+path = obj.get_dest()
+```
 
-Requirements
-==============
-
- * Python 3.4 or greater.
+Copyright (C) 2023-2024 Adam M. Krajewski
 
 Copyright (C) 2014-2020 Itay Brandes.
