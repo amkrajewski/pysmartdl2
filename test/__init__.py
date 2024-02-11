@@ -1,1 +1,1 @@
-from . import test_pySmartDL
+from . import test_pysmartdl
