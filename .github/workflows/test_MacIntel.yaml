@@ -6,10 +6,9 @@ jobs:
   tests:
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
-        platform: [ubuntu-latest, macos-12, macos-14, windows-latest]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
       fail-fast: false
-    runs-on: ${{ matrix.platform }}
+    runs-on: macos-12
     steps:
     - uses: actions/checkout@v3
     
