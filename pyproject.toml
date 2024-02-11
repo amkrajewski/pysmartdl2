@@ -26,6 +26,12 @@ classifiers = [
 ]
 description = "Modernized fork of the Smart Download Manager for Python by iTaybb with CI testing matrix and other 2024 bells and whistles."
 readme = "README.md"
+keywords = [
+  "download",
+  "downloader",
+  "parallel download",
+  "concurrent download"
+]
 
 requires-python = ">=3.8"
 dependencies = [
