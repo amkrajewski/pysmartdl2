@@ -1,6 +1,8 @@
-# pySmartDL 
+# pysmartdl
 
-This software is a fork of the pySmartDL or **Python Smart Download Manager**, which appears to not be maintained anymore. I (1) went through its codebase to check if things work as expected in modern (Python 3.8-12) versions of Python, (2) did some modernizing fixes here and there, and (3) implemented test suites. These test suites go over currently popular Python version on four platforms: Linux (Ubuntu), MacOs (Intel CPU), MacOs (M1 CPU), and Windows.
+This software is a fork of the `pySmartDL` or **Python Smart Download Manager** by iTaybb which appears to not be maintained anymore. I (1) went through its codebase to check if things work as expected in modern (Python 3.8-12+) versions of Python, (2) did some modernizing fixes here and there, (3) implemented test suites, and (4) restructured it to modern standards with `pyproject.toml`. 
+
+Test suites go over all popular Python versions on all four platforms: Linux (Ubuntu), MacOS (Intel CPU), MacOS (M1 CPU), and Windows. Live status is shown below.
 
 [![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Linux.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Linux.yaml)
 
@@ -10,7 +12,7 @@ This software is a fork of the pySmartDL or **Python Smart Download Manager**, w
 
 [![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Windows.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Windows.yaml)
 
-Per the original README, `pySmartDL` strives to be a full-fledged smart download manager for Python. Main features:
+Per the original README, `pysmartdl` strives to be a full-fledged smart download manager for Python. Main features:
 
 * Built-in download acceleration (with the [multipart downloading technique](http://stackoverflow.com/questions/93642/how-do-download-accelerators-work)).
 * Mirrors support.
@@ -23,10 +25,10 @@ Per the original README, `pySmartDL` strives to be a full-fledged smart download
  
 ## Installation
 
-You can install `pySmartDL` from PyPI through `pip`, with a simple:
+You can install `pysmartdl` from PyPI through `pip`, with a simple:
 
 ```cmd
-pip install pySmartDL
+pip install pysmartdl
 ```
 
 Or you can install from the source in _editable_ mode, by cloning this repository and:
@@ -40,7 +42,7 @@ pip install -e .
 Downloading is as simple as creating an instance and starting it:
 
 ```python
-from pySmartDL import SmartDL
+from pysmartdl import SmartDL
 
 url = "https://raw.githubusercontent.com/amkrajewski/pySmartDL/master/test/7za920.zip"
 dest = "."  # <-- To download to current directory 

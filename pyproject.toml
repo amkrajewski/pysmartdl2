@@ -7,7 +7,7 @@ name = "pysmartdl"
 version = "2.0.0"
 authors = [
   { name="Adam Krajewski", email="ak@psu.edu" },
-    { name="Itay Brandes", email="brandes.itay+pysmartdl@gmail.com" },
+  { name="Itay Brandes", email="brandes.itay+pysmartdl@gmail.com" },
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -24,7 +24,7 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Libraries :: Python Modules"
 ]
-description = "A Smart Download Manager for Python"
+description = "Modernized fork of the Smart Download Manager for Python by iTaybb with CI testing matrix and other 2024 bells and whistles."
 readme = "README.md"
 
 requires-python = ">=3.8"
