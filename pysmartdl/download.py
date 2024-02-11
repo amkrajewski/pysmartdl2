@@ -3,7 +3,17 @@ import urllib.request, urllib.error, urllib.parse
 import time
 from . import utils
 
-def download(url, dest, requestArgs=None, context=None, startByte=0, endByte=None, timeout=4, shared_var=None, thread_shared_cmds=None, logger=None, retries=3):
+def download(url, 
+             dest, 
+             requestArgs=None, 
+             context=None, 
+             startByte=0, 
+             endByte=None, 
+             timeout=4, 
+             shared_var=None, 
+             thread_shared_cmds=None, 
+             logger=None, 
+             retries=3) -> None:
     "The basic download function that runs at each thread."
     logger = logger or utils.DummyLogger()
     req = urllib.request.Request(url, **requestArgs)

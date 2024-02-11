@@ -27,9 +27,9 @@ class HashFailedException(Exception):
         self.calculated_hash = calc_hash
         self.needed_hash = needed_hash
     def __str__(self):
-        return 'HashFailedException({}, got {}, expected {})'.format(self.filename, self.calculated_hash, self.needed_hash)
+        return f'HashFailedException({self.filename}, got {self.calculated_hash}, expected {self.needed_hash})'
     def __repr__(self):
-        return '<HashFailedException {}, got {}, expected {}>'.format(self.filename, self.calculated_hash, self.needed_hash)
+        return f'<HashFailedException {self.filename}, got {self.calculated_hash}, expected {self.needed_hash}>'
         
 class CanceledException(Exception):
     "Raised when the job is canceled."
@@ -75,7 +75,16 @@ class SmartDL:
             * If no path is provided, `%TEMP%/pySmartDL/` will be used.
     '''
     
-    def __init__(self, urls, dest=None, progress_bar=True, fix_urls=True, threads=5, timeout=5, logger=None, connect_default_logger=False, request_args=None, verify=True):
+    def __init__(self, 
+                 urls, 
+                 dest=None, 
+                 progress_bar=True, 
+                 fix_urls=True, 
+                 threads=5, 
+                 timeout=5, 
+                 logger=None, 
+                 connect_default_logger=False, 
+                 request_args=None, verify=True) -> None:
         if logger:
             self.logger = logger
         elif connect_default_logger:
@@ -94,10 +103,10 @@ class SmartDL:
         if fix_urls:
             self.mirrors = [utils.url_fix(x) for x in self.mirrors]
         self.url = self.mirrors.pop(0)
-        self.logger.info('Using url "{}"'.format(self.url))
+        self.logger.info(f'Using url "{self.url}"')
 
         fn = urllib.parse.unquote(os.path.basename(urllib.parse.urlparse(self.url).path))
-        self.dest = dest or os.path.join(tempfile.gettempdir(), 'pySmartDL', fn)
+        self.dest = dest or os.path.join(tempfile.gettempdir(), 'pysmartdl', fn)
         if self.dest[-1] == os.sep:
             if os.path.exists(self.dest[:-1]) and os.path.isfile(self.dest[:-1]):
                 os.unlink(self.dest[:-1])
@@ -125,18 +134,18 @@ class SmartDL:
         self.control_thread = None
         
         if not os.path.exists(os.path.dirname(self.dest)):
-            self.logger.info('Folder "{}" does not exist. Creating...'.format(os.path.dirname(self.dest)))
+            self.logger.info(f'Folder "{os.path.dirname(self.dest)}" does not exist. Creating...')
             os.makedirs(os.path.dirname(self.dest))
         if not utils.is_HTTPRange_supported(self.url, timeout=self.timeout):
             self.logger.warning("Server does not support HTTPRange. threads_count is set to 1.")
             self.threads_count = 1
         if os.path.exists(self.dest):
-            self.logger.warning('Destination "{}" already exists. Existing file will be removed.'.format(self.dest))
+            self.logger.warning(f'Destination "{self.dest}" already exists. Existing file will be removed.')
         if not os.path.exists(os.path.dirname(self.dest)):
-            self.logger.warning('Directory "{}" does not exist. Creating it...'.format(os.path.dirname(self.dest)))
+            self.logger.warning(f'Directory "{os.path.dirname(self.dest)}" does not exist. Creating it...')
             os.makedirs(os.path.dirname(self.dest))
         
-        self.logger.info("Creating a ThreadPool of {} thread(s).".format(self.threads_count))
+        self.logger.info(f"Creating a ThreadPool of {self.threads_count} thread(s).")
         self.pool = utils.ManagedThreadPoolExecutor(self.threads_count)
 
         if verify:
@@ -147,10 +156,10 @@ class SmartDL:
             self.context.verify_mode = ssl.CERT_NONE
         
     def __str__(self):
-        return 'SmartDL(r"{}", dest=r"{}")'.format(self.url, self.dest)
-
+        return f'SmartDL(r"{self.url}", dest=r"{self.dest}")'
+    
     def __repr__(self):
-        return "<SmartDL {}>".format(self.url)
+        return f"<SmartDL {self.url}>"
         
     def add_basic_authentication(self, username, password):
         '''
@@ -161,7 +170,7 @@ class SmartDL:
         :param password: Password.
         :type password: string
         '''
-        auth_string = '{}:{}'.format(username, password)
+        auth_string = f"{username}:{password}"
         base64string = base64.standard_b64encode(auth_string.encode('utf-8'))
         self.requestArgs['headers']['Authorization'] = b"Basic " + base64string
         
@@ -206,7 +215,8 @@ class SmartDL:
         self.logger.info("Looking for SUMS files...")
         for filename in default_sums_filenames:
             try:
-                sums_url = "%s/%s" % (folder, filename)
+                #sums_url = "%s/%s" % (folder, filename)
+                sums_url = f"{folder}/{filename}"
                 sumsRequest = urllib.request.Request(sums_url, **self.requestArgs)
                 obj = urllib.request.urlopen(sumsRequest)
                 data = obj.read().split('\n')
@@ -214,7 +224,8 @@ class SmartDL:
                 
                 for line in data:
                     if orig_basename.lower() in line.lower():
-                        self.logger.info("Found a matching hash in %s" % sums_url)
+                        #self.logger.info("Found a matching hash in %s" % sums_url)
+                        self.logger.info(f"Found a matching hash in {sums_url}")
                         algo = filename.rstrip('SUMS')
                         hash = line.split(' ')[0]
                         self.add_hash_verification(algo, hash)
@@ -236,7 +247,7 @@ class SmartDL:
         :type blocking: bool
         '''
         if not self.status == "ready":
-            raise RuntimeError("cannot start (current status is {})".format(self.status))
+            raise RuntimeError(f"cannot start (current status is {self.status})")
         self.logger.info('Starting a new SmartDL operation.')
 
         if blocking is None:
@@ -245,26 +256,26 @@ class SmartDL:
             self._start_func_blocking = blocking
         
         if self.mirrors:
-            self.logger.info('One URL and {} mirrors are loaded.'.format(len(self.mirrors)))
+            self.logger.info(f'One URL and {len(self.mirrors)} mirrors are loaded.')
         else:
             self.logger.info('One URL is loaded.')
         
         if self.verify_hash and os.path.exists(self.dest):
             if utils.get_file_hash(self.hash_algorithm, self.dest) == self.hash_code:
-                self.logger.info("Destination '%s' already exists, and the hash matches. No need to download." % self.dest)
+                self.logger.info(f"Destination {self.dest} already exists, and the hash matches. No need to download.")
                 self.status = 'finished'
                 return
 
-        self.logger.info("Downloading '{}' to '{}'...".format(self.url, self.dest))
+        self.logger.info(f"Downloading '{self.url}' to '{self.dest}'...")
         req = urllib.request.Request(self.url, **self.requestArgs)
         try:
             urlObj = urllib.request.urlopen(req, timeout=self.timeout, context=self.context)
         except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout) as e:
             self.errors.append(e)
             if self.mirrors:
-                self.logger.info("{} Trying next mirror...".format(str(e)))
+                self.logger.info(f"{e} Trying next mirror...")
                 self.url = self.mirrors.pop(0)
-                self.logger.info('Using url "{}"'.format(self.url))
+                self.logger.info(f'Using url {self.url}')
                 self.start(blocking)
                 return
             else:
@@ -276,7 +287,7 @@ class SmartDL:
         
         try:
             self.filesize = int(urlObj.headers["Content-Length"])
-            self.logger.info("Content-Length is {} ({}).".format(self.filesize, utils.sizeof_human(self.filesize)))
+            self.logger.info(f"Content-Length is {self.filesize} ({utils.sizeof_human(self.filesize)}).")
         except (IndexError, KeyError, TypeError):
             self.logger.warning("Server did not send Content-Length. Filesize is unknown.")
             self.filesize = 0
@@ -284,9 +295,9 @@ class SmartDL:
         args = utils.calc_chunk_size(self.filesize, self.threads_count, self.minChunkFile)
         bytes_per_thread = args[0][1] - args[0][0] + 1
         if len(args)>1:
-            self.logger.info("Launching {} threads (downloads {}/thread).".format(len(args),  utils.sizeof_human(bytes_per_thread)))
+            self.logger.info(f"Launching {len(args)} threads (downloads {utils.sizeof_human(bytes_per_thread)}/thread).")
         else:
-            self.logger.info("Launching 1 thread (downloads {}).".format(utils.sizeof_human(bytes_per_thread)))
+            self.logger.info(f"Launching 1 thread (downloads {utils.sizeof_human(bytes_per_thread)}).")
         
         self.status = "downloading"
         
@@ -335,9 +346,9 @@ class SmartDL:
             self.start()
              
         else:
-            s = 'The maximum retry attempts reached'
+            s = 'The maximum retry attempts reached!'
             if eStr:
-                s += " ({})".format(eStr)
+                s += f" ({eStr})"
             self.errors.append(urllib.error.HTTPError(self.url, "0", s, {}, StringIO()))
             self._failed = True
             
@@ -348,7 +359,7 @@ class SmartDL:
             self.status = "ready"
             self.shared_var.value = 0
             self.url = self.mirrors.pop(0)
-            self.logger.info('Using url "{}"'.format(self.url))
+            self.logger.info(f'Using url "{self.url}"')
             self.start()
         else:
             self._failed = True
@@ -593,7 +604,7 @@ class SmartDL:
         :rtype: string
         '''
         if self.status != 'finished':
-            raise RuntimeError("The download task must be finished in order to read the data. (current status is %s)" % self.status)
+            raise RuntimeError(f"The download task must be finished in order to read the data. (current status is {self.status})")
             
         flags = 'rb' if binary else 'r'
         with open(self.get_dest(), flags) as f:
@@ -650,7 +661,7 @@ def post_threadpool_actions(pool, args, expected_filesize, SmartDLObj):
         
         # if the difference is more than 4*thread numbers (because a thread may download 4KB extra per thread because of NTFS's block size)
         if diff > 4*1024*threads:
-            errMsg = 'Diff between downloaded files and expected filesizes is {}B (filesize: {}, expected_filesize: {}, {} threads).'.format(total_filesize, expected_filesize, diff, threads)
+            errMsg = f'Diff between downloaded files and expected filesizes is {total_filesize}B (filesize: {expected_filesize}, expected_filesize: {diff}, {threads} threads).'
             SmartDLObj.logger.warning(errMsg)
             SmartDLObj.retry(errMsg)
             return
