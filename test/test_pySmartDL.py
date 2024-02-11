@@ -55,20 +55,23 @@ class TestSmartDL(unittest.TestCase):
         self.assertTrue(obj.isSuccessful())
         
     def test_hash(self):
+        """ Testing hash verification in case of positive and negative results """
         obj = pySmartDL.SmartDL(self.res_7za920_mirrors, progress_bar=False, connect_default_logger=self.enable_logging)
         obj.add_hash_verification('sha256' , self.res_7za920_hash)  # good hash
         obj.start(blocking=False)  # no exceptions
         obj.wait()
         
         self.assertTrue(obj.isSuccessful())
-        
+
         obj = pySmartDL.SmartDL(self.res_7za920_mirrors, progress_bar=False, connect_default_logger=self.enable_logging)
         obj.add_hash_verification('sha256' ,'a'*64)  # bad hash
         obj.start(blocking=False)  # no exceptions
         obj.wait()
         
         self.assertFalse(obj.isSuccessful())
-        self.assertTrue(any([isinstance(e, pySmartDL.HashFailedException) for e in obj.get_errors()]))
+        errorList = obj.get_errors()
+        self.assertTrue(len(errorList) > 0)
+        self.assertTrue(pySmartDL.HashFailedException in [type(e) for e in errorList])
         
     def test_pause_unpause(self, testfile=None):
         obj = pySmartDL.SmartDL(testfile if testfile else self.res_7za920_mirrors, dest=self.dl_dir, progress_bar=False, connect_default_logger=self.enable_logging)
