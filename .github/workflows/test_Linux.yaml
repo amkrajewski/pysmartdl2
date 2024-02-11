@@ -1,4 +1,4 @@
-name: Linux (Ubuntu) CI Python 3.8-13
+name: Linux Python 3.8-13
 
 on: [push]
 

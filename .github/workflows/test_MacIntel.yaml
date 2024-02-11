@@ -1,4 +1,4 @@
-name: Mac Intel CI Python 3.8-13
+name: Mac Intel Python 3.8-13
 
 on: [push]
 
