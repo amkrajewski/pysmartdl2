@@ -24,10 +24,7 @@ class TestSmartDL(unittest.TestCase):
             
         self.res_7za920_mirrors = [
             "https://github.com/iTaybb/pySmartDL/raw/master/test/7za920.zip",
-            "https://sourceforge.mirrorservice.org/s/se/sevenzip/7-Zip/9.20/7za920.zip",
-            "http://www.bevc.net/dl/7za920.zip",
-            "http://ftp.psu.ru/tools/7-zip/stable/7za920.zip",
-            "http://www.mirrorservice.org/sites/downloads.sourceforge.net/s/se/sevenzip/7-Zip/9.20/7za920.zip"
+            "http://www.bevc.net/dl/7za920.zip"
         ]
         self.res_7za920_hash = '2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac'
         self.res_testfile_1gb = 'http://www.ovh.net/files/1Gio.dat'
