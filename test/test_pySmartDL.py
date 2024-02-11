@@ -8,10 +8,7 @@ import math
 import unittest
 import warnings
 import tempfile
-from pathlib import Path
 import socket
-
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import pySmartDL
 
@@ -32,7 +29,7 @@ class TestSmartDL(unittest.TestCase):
         self.enable_logging = "-vvv" in sys.argv
     
     def test_download(self):
-        """ Testing the ability to download a file."""
+        """-->Testing the ability to download a file:"""
         obj = pySmartDL.SmartDL(
             self.res_7za920_mirrors, 
             dest=self.dl_dir, 
@@ -50,7 +47,7 @@ class TestSmartDL(unittest.TestCase):
             obj.start()
     
     def test_mirrors(self):
-        """ Testing the ability to download from multiple mirrors, where the first one is a fake one."""
+        """-->Testing the ability to download from multiple mirrors, where the first one is a fake one:"""
         urls = ["http://totally_fake_website/7za.zip", "https://github.com/iTaybb/pySmartDL/raw/master/test/7za920.zip"]
         obj = pySmartDL.SmartDL(urls, dest=self.dl_dir, progress_bar=False, connect_default_logger=self.enable_logging)
         obj.start()
@@ -58,7 +55,7 @@ class TestSmartDL(unittest.TestCase):
         self.assertTrue(obj.isSuccessful())
         
     def test_hash(self):
-        """ Testing hash verification in case of positive and negative results."""
+        """-->Testing hash verification in case of positive and negative results:"""
         obj = pySmartDL.SmartDL(
             self.res_7za920_mirrors, 
             progress_bar=False, 
@@ -83,7 +80,7 @@ class TestSmartDL(unittest.TestCase):
         self.assertTrue(pySmartDL.HashFailedException in [type(e) for e in errorList])
         
     def test_pause_unpause(self, testfile=None):
-        """ Testing the ability to pause and unpause a download."""
+        """-->Testing the ability to pause and unpause a download:"""
         obj = pySmartDL.SmartDL(
             testfile if testfile else self.res_7za920_mirrors, 
             dest=self.dl_dir, 
@@ -98,7 +95,7 @@ class TestSmartDL(unittest.TestCase):
         obj.pause()
         time.sleep(0.5)
         if obj.get_status() == "finished":
-            print("The test file downloaded too fast, trying a bigger file")
+            print("\nThe test file downloaded too fast, trying a bigger file: ...")
             if self.res_testfile_100mb == testfile:
                 self.fail("The download got completed before we could stop it, even though we've used a big file. Are we on a 100GB/s internet connection or somethin'?")
             return self.test_pause_unpause(testfile=self.res_testfile_100mb)
@@ -118,6 +115,7 @@ class TestSmartDL(unittest.TestCase):
         self.assertTrue(obj.isSuccessful())
 
     def test_stop(self):
+        """-->Testing the ability to stop a download:"""
         obj = pySmartDL.SmartDL(self.res_testfile_100mb, dest=self.dl_dir, progress_bar=False, connect_default_logger=self.enable_logging)
         obj.start(blocking=False)
 
@@ -129,6 +127,7 @@ class TestSmartDL(unittest.TestCase):
         self.assertFalse(obj.isSuccessful())
 
     def test_speed_limiting(self):
+        """-->Testing the ability to limit the download speed to 1MB/s. Takes 30 seconds and should be around 30MB:"""
         obj = pySmartDL.SmartDL(self.res_testfile_1gb, dest=self.dl_dir, progress_bar=False, connect_default_logger=self.enable_logging)
         obj.limit_speed(1024**2)  # 1MB per sec
         obj.start(blocking=False)
@@ -147,6 +146,7 @@ class TestSmartDL(unittest.TestCase):
         self.assertLessEqual(diff, allowed_delta)
     
     def test_basic_auth(self):
+        """-->Authentification testing:"""
         basic_auth_test_url = "https://httpbin.org/basic-auth/user/passwd"
         obj = pySmartDL.SmartDL(basic_auth_test_url, progress_bar=False, connect_default_logger=self.enable_logging)
         obj.add_basic_authentication('user', 'passwd')
@@ -155,20 +155,32 @@ class TestSmartDL(unittest.TestCase):
         self.assertTrue(json.loads(data)['authenticated'])
         
     def test_unicode(self):
+        """-->Handling of unicode URLs:"""
         url = "https://he.wikipedia.org/wiki/ג'חנון"
         obj = pySmartDL.SmartDL(url, progress_bar=False, connect_default_logger=self.enable_logging)
         obj.start()
 
     def test_timeout(self):
-        self.assertRaises(socket.timeout, pySmartDL.SmartDL, "https://httpbin.org/delay/10", progress_bar=False, timeout=3, connect_default_logger=self.enable_logging)
+        """-->Test that long delay triggers short timeout and short delay triggers no timeout:"""
+        self.assertRaises(
+            socket.timeout, 
+            pySmartDL.SmartDL, 
+            "https://httpbin.org/delay/10", 
+            progress_bar=False, 
+            timeout=3, 
+            connect_default_logger=self.enable_logging)
 
-        obj = pySmartDL.SmartDL("https://httpbin.org/delay/3", progress_bar=False, timeout=15, connect_default_logger=self.enable_logging)
+        obj = pySmartDL.SmartDL(
+            "https://httpbin.org/delay/3", 
+            progress_bar=False, 
+            timeout=15, 
+            connect_default_logger=self.enable_logging)
         obj.start(blocking=False)
         obj.wait()
         self.assertTrue(obj.isSuccessful())
 
     def test_custom_headers(self):
-        # sending custom user agent
+        """-->Testing the ability to send custom headers:"""
         ua = "pySmartDL/1.3.2"
        	request_args = {"headers": {"User-Agent": ua}}
         obj = pySmartDL.SmartDL("http://httpbin.org/headers", request_args=request_args, progress_bar=False)
@@ -198,6 +210,7 @@ class TestSmartDL(unittest.TestCase):
             self._test_calc_chunk_size(261969919, 20, 32)
 
     def _test_calc_chunk_size(self, filesize, threads, minChunkFile):
+        """-->Testing the calc_chunk_size function: """
         chunks = pySmartDL.utils.calc_chunk_size(filesize, threads, 20)
         self.assertEqual(chunks[0][0], 0)
         self.assertIsInstance(chunks[0][0], int)
@@ -211,7 +224,6 @@ class TestSmartDL(unittest.TestCase):
             
         self.assertEqual(chunks[-1][1], filesize-1)
 
-        
 def test_suite():
     suite = unittest.makeSuite(TestSmartDL)
     return suite
