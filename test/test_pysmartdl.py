@@ -10,7 +10,7 @@ import warnings
 import tempfile
 import socket
 
-import pySmartDL
+import pysmartdl
 
 class TestSmartDL(unittest.TestCase):
     def setUp(self):

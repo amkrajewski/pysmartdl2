@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
-import pySmartDL
+import pysmartdl
 
 extra = {}
 release_posttag = ""
 
 setup(
-    name='pySmartDL',
-    version=pySmartDL.__version__ + release_posttag,
+    name='pysmartdl',
+    version=pysmartdl.__version__ + release_posttag,
     url='http://pypi.python.org/pypi/pySmartDL/',
     author='Itay Brandes',
     author_email='brandes.itay+pysmartdl@gmail.com',
@@ -14,7 +14,7 @@ setup(
     packages=find_packages(),
     description='A Smart Download Manager for Python',
     long_description=open('README.md').read(),
-    test_suite = "test.test_pySmartDL.test_suite",
+    test_suite = "test.test_pysmartdl.test_suite",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
