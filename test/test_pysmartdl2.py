@@ -10,7 +10,7 @@ import warnings
 import tempfile
 import socket
 
-from pysmartdl import SmartDL, HashFailedException, CanceledException, utils
+from pysmartdl2 import SmartDL, HashFailedException, CanceledException, utils
 
 class TestSmartDL(unittest.TestCase):
     def setUp(self):

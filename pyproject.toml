@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pysmartdl"
+name = "pysmartdl2"
 version = "2.0.0"
 authors = [
   { name="Adam Krajewski", email="ak@psu.edu" },
@@ -45,7 +45,7 @@ tests = [
 ]
 
 [project.urls]
-homepage = "https://github.com/amkrajewski/pySmartDL"
-repository = "https://github.com/amkrajewski/pySmartDL"
-"Bug Tracker" = "https://github.com/amkrajewski/pySmartDL/issues"
+homepage = "https://github.com/amkrajewski/pysmartdl2"
+repository = "https://github.com/amkrajewski/pysmartdl2"
+"Bug Tracker" = "https://github.com/amkrajewski/pysmartdl2/issues"
 "ForkedFrom" = "https://github.com/iTaybb/pySmartDL"

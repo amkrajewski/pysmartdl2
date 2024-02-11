@@ -1,16 +1,16 @@
-# pysmartdl
+# pysmartdl2
 
 This software is a fork of the `pySmartDL` or **Python Smart Download Manager** by iTaybb which appears to not be maintained anymore. I (1) went through its codebase to check if things work as expected in modern (Python 3.8-12+) versions of Python, (2) did some modernizing fixes here and there, (3) implemented test suites, and (4) restructured it to modern standards with `pyproject.toml`. 
 
 Test suites go over all popular Python versions on all four platforms: Linux (Ubuntu), MacOS (Intel CPU), MacOS (M1 CPU), and Windows. Live status is shown below.
 
-[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Linux.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Linux.yaml)
+[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Linux.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Linux.yaml)
 
-[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacM1.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacM1.yaml)
+[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacM1.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacM1.yaml)
 
-[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacIntel.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacIntel.yaml)
+[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacIntel.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacIntel.yaml)
 
-[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Windows.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Windows.yaml)
+[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Windows.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Windows.yaml)
 
 Per the original README, `pysmartdl` strives to be a full-fledged smart download manager for Python. Main features:
 
@@ -25,10 +25,10 @@ Per the original README, `pysmartdl` strives to be a full-fledged smart download
  
 ## Installation
 
-You can install `pysmartdl` from PyPI through `pip`, with a simple:
+You can install `pysmartdl2` from PyPI through `pip`, with a simple:
 
 ```cmd
-pip install pysmartdl
+pip install pysmartdl2
 ```
 
 Or you can install from the source in _editable_ mode, by cloning this repository and:
@@ -39,12 +39,12 @@ pip install -e .
  
 ## Usage
 
-Downloading is as simple as creating an instance and starting it:
+Downloading with it is as simple as creating an instance and starting it:
 
 ```python
-from pysmartdl import SmartDL
+from pysmartdl2 import SmartDL
 
-url = "https://raw.githubusercontent.com/amkrajewski/pySmartDL/master/test/7za920.zip"
+url = "https://raw.githubusercontent.com/amkrajewski/pysmartdl2/master/test/7za920.zip"
 dest = "."  # <-- To download to current directory 
             # or '~/Downloads/' for Downloads directory on Linux
             # or "C:\\Downloads\\" for Downloads directory on Windows
