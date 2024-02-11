@@ -1,4 +1,4 @@
-name: Multi-OS Multi-Python Build
+name: Windows CI Python 3.8 - 3.13
 
 on: [push]
 
@@ -6,7 +6,7 @@ jobs:
   tests:
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13.0-alpha.3"]
       fail-fast: false
     runs-on: windows-latest
     steps:
