@@ -27,8 +27,8 @@ class TestSmartDL(unittest.TestCase):
             "http://www.bevc.net/dl/7za920.zip"
         ]
         self.res_7za920_hash = '2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac'
-        self.res_testfile_1gb = 'http://www.ovh.net/files/1Gio.dat'
-        self.res_testfile_100mb = 'http://www.ovh.net/files/100Mio.dat'
+        self.res_testfile_1gb = 'https://proof.ovh.net/files/1Gb.dat'
+        self.res_testfile_100mb = 'https://proof.ovh.net/files/100Mb.dat'
         self.enable_logging = "-vvv" in sys.argv
     
     def test_download(self):
@@ -83,22 +83,22 @@ class TestSmartDL(unittest.TestCase):
         self.assertTrue(pySmartDL.HashFailedException in [type(e) for e in errorList])
         
     def test_pause_unpause(self, testfile=None):
+        """ Testing the ability to pause and unpause a download."""
         obj = pySmartDL.SmartDL(
             testfile if testfile else self.res_7za920_mirrors, 
             dest=self.dl_dir, 
             progress_bar=False, 
             connect_default_logger=self.enable_logging)
         obj.start(blocking=False)
-        
+
         while not obj.get_dl_size():
             time.sleep(0.1)
-        
+
         # pause
         obj.pause()
         time.sleep(0.5)
         if obj.get_status() == "finished":
-            # too bad, the file was too small and was downloaded complectely until we stopped it.
-            # We should download a bigger file
+            print("The test file downloaded too fast, trying a bigger file")
             if self.res_testfile_100mb == testfile:
                 self.fail("The download got completed before we could stop it, even though we've used a big file. Are we on a 100GB/s internet connection or somethin'?")
             return self.test_pause_unpause(testfile=self.res_testfile_100mb)
