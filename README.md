@@ -1,6 +1,11 @@
 Python Smart Download Manager -- pySmartDL
 ==========================================
 
+[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Linux.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Linux.yaml)
+[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacM1.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacM1.yaml)
+[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacIntel.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_MacIntel.yaml)
+[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Windows.yaml/badge.svg)](https://github.com/amkrajewski/pySmartDL/actions/workflows/test_Windows.yaml)
+
 ``pySmartDL`` strives to be a full-fledged smart download manager for Python. Main features:
 
 * Built-in download acceleration (with the `multipart downloading technique <http://stackoverflow.com/questions/93642/how-do-download-accelerators-work>`_).
