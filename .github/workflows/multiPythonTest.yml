@@ -1,4 +1,4 @@
-name: Multi-OS Build
+name: Multi-OS Multi-Python Build
 
 on: [push]
 
@@ -7,7 +7,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
-        platform: [ubuntu-latest, macos-latest, windows-latest]
+        platform: [ubuntu-latest, macos-12, macos-14, windows-latest]
+      fail-fast: false
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v3
@@ -26,5 +27,4 @@ jobs:
         python -m pip install -e .
         
     - name: Test with pytest
-      run: |
-        pytest --cov=pySmartDL --cov-report=xml
+      run: pytest
