@@ -661,7 +661,7 @@ def post_threadpool_actions(pool, args, expected_filesize, SmartDLObj):
         
         # if the difference is more than 4*thread numbers (because a thread may download 4KB extra per thread because of NTFS's block size)
         if diff > 4*1024*threads:
-            errMsg = f'Diff between downloaded files and expected filesizes is {total_filesize}B (filesize: {expected_filesize}, expected_filesize: {diff}, {threads} threads).'
+            errMsg = f'Diff between downloaded files and expected filesizes is {diff}B (filesize: {total_filesize}, expected_filesize: {expected_filesize}, {threads} threads).'
             SmartDLObj.logger.warning(errMsg)
             SmartDLObj.retry(errMsg)
             return
