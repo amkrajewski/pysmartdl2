@@ -1,16 +1,22 @@
 # pysmartdl2
 
-This software is a fork of the `pySmartDL` or **Python Smart Download Manager** by iTaybb which appears to not be maintained anymore. I (1) went through its codebase to check if things work as expected in modern (Python 3.8-12+) versions of Python, (2) did some modernizing fixes here and there, (3) implemented test suites, and (4) restructured it to modern standards with `pyproject.toml`. 
+[![GitHub top language](https://img.shields.io/github/languages/top/amkrajewski/pysmartdl2)](https://github.com/amkrajewski/pysmartdl2)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pysmartdl2)](https://pypi.org/project/pysmartdl2)
+![GitHub License](https://img.shields.io/github/license/amkrajewski/pysmartdl2)
+[![PyPI - Version](https://img.shields.io/pypi/v/pysmartdl2?label=PyPI&color=green)](https://pypi.org/project/pysmartdl2)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/pysmartdl2)](https://pypi.org/project/pysmartdl2)
 
-Test suites go over all popular Python versions on all four platforms: Linux (Ubuntu), MacOS (Intel CPU), MacOS (M1 CPU), and Windows. Live status is shown below.
+This software is a fork of the `pySmartDL` or **Python Smart Download Manager** by iTaybb which appears to not be maintained anymore. I (1) went through its codebase to check if things work as expected in modern (Python 3.8-12+) versions of Python, (2) did some modernizing fixes here and there, (3) fixed broken test suites, (4) implemented automated testing workflows, and (4) restructured the package to modern standards (e.g., `pyproject.toml`). Enjoy!
+
+Test suites go over all popular Python versions (Python 3.8 - 3.13) on all four platforms enabled by GitHub Action Runners: Linux (Ubuntu), MacOS (Intel CPU), MacOS (M1 CPU), and Windows. Live status is shown below.
 
 [![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Linux.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Linux.yaml)
 
-[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacM1.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacM1.yaml)
+[![Multi-OS Multi-Python Build2](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacM1.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacM1.yaml)
 
-[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacIntel.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacIntel.yaml)
+[![Multi-OS Multi-Python Build3](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacIntel.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacIntel.yaml)
 
-[![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Windows.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Windows.yaml)
+[![Multi-OS Multi-Python Build4](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Windows.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Windows.yaml)
 
 Per the original README, `pysmartdl` strives to be a full-fledged smart download manager for Python. Main features:
 
