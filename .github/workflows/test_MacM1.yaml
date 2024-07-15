@@ -1,4 +1,4 @@
-name: Mac M1 Python 3.10-13a_
+name: Mac ARM (M1)
 
 on: [push]
 

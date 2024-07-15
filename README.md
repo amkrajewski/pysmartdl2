@@ -11,11 +11,8 @@ This software is a fork of the `pySmartDL` or **Python Smart Download Manager** 
 Test suites go over all popular Python versions (Python 3.8 - 3.13) on all four platforms enabled by GitHub Action Runners: Linux (Ubuntu), MacOS (Intel CPU), MacOS (M1 CPU), and Windows. Live status is shown below.
 
 [![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Linux.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Linux.yaml)
-
 [![Multi-OS Multi-Python Build2](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacM1.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacM1.yaml)
-
 [![Multi-OS Multi-Python Build3](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacIntel.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacIntel.yaml)
-
 [![Multi-OS Multi-Python Build4](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Windows.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Windows.yaml)
 
 Per the original README, `pysmartdl` strives to be a full-fledged smart download manager for Python. Main features:

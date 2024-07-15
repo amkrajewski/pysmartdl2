@@ -1,4 +1,4 @@
-name: Linux Python 3.8-13a_
+name: Linux
 
 on: [push]
 
