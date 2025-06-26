@@ -59,6 +59,6 @@ obj.start()
 path = obj.get_dest()
 ```
 
-Copyright (C) 2023-2024 Adam M. Krajewski
+Copyright (C) 2023-2025 Adam M. Krajewski
 
 Copyright (C) 2014-2020 Itay Brandes.
