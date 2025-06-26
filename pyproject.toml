@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pysmartdl2"
-version = "2.0.1"
+version = "2.0.2"
 authors = [
   { name="Adam Krajewski", email="ak@psu.edu" },
   { name="Itay Brandes", email="brandes.itay+pysmartdl@gmail.com" },
