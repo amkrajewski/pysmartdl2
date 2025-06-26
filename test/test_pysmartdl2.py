@@ -20,7 +20,7 @@ class TestSmartDL(unittest.TestCase):
             self.dl_dir = os.path.join(tempfile.gettempdir(), "".join([random.choice(string.ascii_letters+string.digits) for i in range(8)]), '')
             
         self.res_7za920_mirrors = [
-            "https://github.com/iTaybb/pySmartDL/raw/master/test/7za920.zip",
+            "https://raw.githubusercontent.com/amkrajewski/pysmartdl2/refs/heads/main/test/7za920.zip",
             "http://www.bevc.net/dl/7za920.zip"
         ]
         self.res_7za920_hash = '2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac'
@@ -48,7 +48,7 @@ class TestSmartDL(unittest.TestCase):
     
     def test_mirrors(self):
         """-->Testing the ability to download from multiple mirrors, where the first one is a fake one:"""
-        urls = ["http://totally_fake_website/7za.zip", "https://github.com/iTaybb/pySmartDL/raw/master/test/7za920.zip"]
+        urls = ["http://totally_fake_website/7za.zip", "https://raw.githubusercontent.com/amkrajewski/pysmartdl2/refs/heads/main/test/7za920.zip"]
         obj = SmartDL(urls, dest=self.dl_dir, progress_bar=False, connect_default_logger=self.enable_logging)
         obj.start()
         
