@@ -234,7 +234,7 @@ class SmartDL:
             except urllib.error.HTTPError:
                 continue
         
-    def start(self, blocking=None):
+    def start(self, blocking=None, _internal=False):
         '''
         Starts the download task. Will raise `RuntimeError` if it's the object's already downloading.
         
@@ -246,13 +246,13 @@ class SmartDL:
         :param blocking: If true, calling this function will block the thread until the download finished. Default is *True*.
         :type blocking: bool
         '''
-        if not self.status == "ready":
+        if not _internal and not self.status == "ready":
             raise RuntimeError(f"cannot start (current status is {self.status})")
         self.logger.info('Starting a new SmartDL operation.')
 
         if blocking is None:
             blocking = self._start_func_blocking
-        else:
+        elif not _internal:
             self._start_func_blocking = blocking
         
         if self.mirrors:
@@ -276,21 +276,27 @@ class SmartDL:
                 self.logger.info(f"{e} Trying next mirror...")
                 self.url = self.mirrors.pop(0)
                 self.logger.info(f'Using url {self.url}')
-                self.start(blocking)
+                self.start(blocking, _internal=_internal)
                 return
-            elif isinstance(e, urllib.error.HTTPError) and e.code == 429 and len(self.errors) <= 5:
-                retry_after = e.headers.get("Retry-After")
-                wait_time = int(retry_after) if (retry_after and retry_after.isdigit()) else 5
+            elif (
+                (isinstance(e, urllib.error.HTTPError) and e.code in (416, 429, 500, 502, 503, 504))
+                or isinstance(e, (urllib.error.URLError, socket.timeout))
+            ) and len(self.errors) <= 5:
+                retry_after = e.headers.get("Retry-After") if isinstance(e, urllib.error.HTTPError) else None
+                wait_time = int(retry_after) if (retry_after and retry_after.isdigit()) else 5 * len(self.errors)
+                if isinstance(e, urllib.error.HTTPError) and e.code in (416, 429):
+                    self.threads_count = max(1, self.threads_count // 2)
                 self.logger.info(f"{e}. Retrying in {wait_time}s...")
                 time.sleep(min(wait_time, 60))
-                self.start(blocking)
+                self.start(blocking, _internal=_internal)
                 return
             else:
                 self.logger.warning(str(e))
-                self.errors.append(e)
                 self._failed = True
                 self.status = "finished"
-                raise
+                if not _internal:
+                    raise
+                return
         
         try:
             self.filesize = int(urlObj.headers["Content-Length"])
@@ -298,15 +304,23 @@ class SmartDL:
         except (IndexError, KeyError, TypeError):
             self.logger.warning("Server did not send Content-Length. Filesize is unknown.")
             self.filesize = 0
+        finally:
+            urlObj.close()
             
         args = utils.calc_chunk_size(self.filesize, self.threads_count, self.minChunkFile)
+        if self._speed_limit > 0 and len(args) > 0:
+            self.thread_shared_cmds['limit'] = self._speed_limit / len(args)
         bytes_per_thread = args[0][1] - args[0][0] + 1
         if len(args)>1:
             self.logger.info(f"Launching {len(args)} threads (downloads {utils.sizeof_human(bytes_per_thread)}/thread).")
         else:
             self.logger.info(f"Launching 1 thread (downloads {utils.sizeof_human(bytes_per_thread)}).")
         
-        self.status = "downloading"
+        if self.status != "paused":
+            self.status = "downloading"
+        
+        if self.pool._futures or getattr(self.pool, '_max_workers', self.threads_count) != self.threads_count:
+            self.pool = utils.ManagedThreadPoolExecutor(self.threads_count)
         
         for i, arg in enumerate(args):
             req = self.pool.submit(
@@ -337,7 +351,7 @@ class SmartDL:
         
         self.control_thread = ControlThread(self)
         
-        if blocking:
+        if blocking and not _internal:
             self.wait(raise_exceptions=True)
             
     def _exc_callback(self, req, e):
