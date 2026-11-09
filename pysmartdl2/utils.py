@@ -97,20 +97,13 @@ def is_HTTPRange_supported(url, timeout=15):
     '''
     url = url.replace(' ', '%20')
     
-    fullsize = get_filesize(url, timeout=timeout)
-    if not fullsize:
+    try:
+        headers = {'Range': 'bytes=0-3', 'User-Agent': get_random_useragent()}
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=timeout) as urlObj:
+            return getattr(urlObj, 'status', getattr(urlObj, 'code', None)) == 206 or "Content-Range" in urlObj.headers
+    except (IndexError, KeyError, TypeError, urllib.error.HTTPError, urllib.error.URLError):
         return False
-    
-    headers = {'Range': 'bytes=0-3'}
-    req = urllib.request.Request(url, headers=headers)
-    urlObj = urllib.request.urlopen(req, timeout=timeout)
-    urlObj.close()
-    
-    if "Content-Length" not in urlObj.headers:
-        return False
-
-    filesize = int(urlObj.headers["Content-Length"])
-    return filesize != fullsize
 
 def get_filesize(url, timeout=15):
     '''
@@ -124,8 +117,9 @@ def get_filesize(url, timeout=15):
     :rtype: int
     '''
     try:
-        urlObj = urllib.request.urlopen(url, timeout=timeout)
-        file_size = int(urlObj.headers["Content-Length"])
+        req = urllib.request.Request(url, headers={'User-Agent': get_random_useragent()})
+        with urllib.request.urlopen(req, timeout=timeout) as urlObj:
+            file_size = int(urlObj.headers["Content-Length"])
     except (IndexError, KeyError, TypeError, urllib.error.HTTPError, urllib.error.URLError):
         return 0
         
