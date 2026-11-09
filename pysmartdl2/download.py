@@ -48,7 +48,7 @@ def download(url,
     try:
         # Context is used to skip ssl validation if verify is False.
         urlObj = urllib.request.urlopen(req, timeout=timeout, context=context)
-    except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout, http.client.HTTPException) as e:
+    except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout, http.client.HTTPException, ConnectionError) as e:
         is_retryable = not isinstance(e, urllib.error.HTTPError) or e.code in (416, 429, 500, 502, 503, 504)
         if is_retryable and retries > 0:
             '''

@@ -9,6 +9,7 @@ import tempfile
 import base64
 import hashlib
 import socket
+import http.client
 import logging
 from io import StringIO
 import multiprocessing.dummy as multiprocessing
@@ -270,7 +271,7 @@ class SmartDL:
                     urlObj = urllib.request.urlopen(req, timeout=self.timeout, context=self.context)
                 else:
                     raise
-        except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout) as e:
+        except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout, http.client.HTTPException, ConnectionError) as e:
             self.errors.append(e)
             if self.mirrors:
                 self.logger.info(f"{e} Trying next mirror...")
@@ -281,7 +282,7 @@ class SmartDL:
                 return
             elif (
                 (isinstance(e, urllib.error.HTTPError) and e.code in (416, 429, 500, 502, 503, 504))
-                or isinstance(e, (urllib.error.URLError, socket.timeout))
+                or isinstance(e, (urllib.error.URLError, socket.timeout, http.client.HTTPException, ConnectionError))
             ) and len(self.errors) <= 5:
                 retry_after = e.headers.get("Retry-After") if isinstance(e, urllib.error.HTTPError) else None
                 wait_time = int(retry_after) if (retry_after and retry_after.isdigit()) else 5 * len(self.errors)
