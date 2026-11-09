@@ -27,8 +27,10 @@ class ControlThread(threading.Thread):
     def run(self):
         t1 = time.time()
         self.logger.info("Control thread has been started.")
+        pool = self.obj.pool
+        post_thread = self.obj.post_threadpool_thread
         
-        while not self.obj.pool.done():
+        while not pool.done():
             self.dl_speed = self.calcDownloadSpeed(self.shared_var.value)
             if self.dl_speed > 0:
                 self.eta = self.calcETA((self.obj.filesize-self.shared_var.value)/self.dl_speed)
@@ -44,6 +46,8 @@ class ControlThread(threading.Thread):
             
         if self.obj._killed:
             self.logger.info("File download process has been stopped.")
+            pool.shutdown(wait=False)
+            self.obj.status = "finished"
             return
             
         if self.progress_bar:
@@ -55,10 +59,13 @@ class ControlThread(threading.Thread):
         t2 = time.time()
         self.dl_time = float(t2-t1)
         
-        while self.obj.post_threadpool_thread.is_alive():
-            time.sleep(0.1)
+        if post_thread:
+            while post_thread.is_alive():
+                time.sleep(0.1)
             
-        self.obj.pool.shutdown()
+        pool.shutdown(wait=False)
+        if self.obj.control_thread is not self:
+            return
         self.obj.status = "finished"
         if not self.obj.errors:
             self.logger.info("File downloaded within %.2f seconds." % self.dl_time)
