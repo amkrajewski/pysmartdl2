@@ -278,6 +278,13 @@ class SmartDL:
                 self.logger.info(f'Using url {self.url}')
                 self.start(blocking)
                 return
+            elif isinstance(e, urllib.error.HTTPError) and e.code == 429 and len(self.errors) <= 5:
+                retry_after = e.headers.get("Retry-After")
+                wait_time = int(retry_after) if (retry_after and retry_after.isdigit()) else 5
+                self.logger.info(f"{e}. Retrying in {wait_time}s...")
+                time.sleep(min(wait_time, 60))
+                self.start(blocking)
+                return
             else:
                 self.logger.warning(str(e))
                 self.errors.append(e)
