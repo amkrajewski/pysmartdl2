@@ -90,7 +90,7 @@ class SmartDL:
             self.requestArgs = {"headers": dict()}
         if "User-Agent" not in self.requestArgs["headers"]:
             self.requestArgs["headers"]["User-Agent"] = utils.get_random_useragent()
-        self.mirrors = [urls] if isinstance(urls, str) else urls
+        self.mirrors = [urls] if isinstance(urls, str) else list(urls)
         if fix_urls:
             self.mirrors = [utils.url_fix(x) for x in self.mirrors]
         self.url = self.mirrors.pop(0)
@@ -107,6 +107,7 @@ class SmartDL:
         
         self.progress_bar = progress_bar
         self.threads_count = threads
+        self._orig_threads_count = threads
         self.timeout = timeout
         self.current_attemp = 1 
         self.attemps_limit = 4
@@ -259,15 +260,23 @@ class SmartDL:
                 return
 
         self.logger.info(f"Downloading '{self.url}' to '{self.dest}'...")
-        req = urllib.request.Request(self.url, **self.requestArgs)
         try:
-            urlObj = urllib.request.urlopen(req, timeout=self.timeout, context=self.context)
+            req = urllib.request.Request(self.url, method="HEAD", **self.requestArgs)
+            try:
+                urlObj = urllib.request.urlopen(req, timeout=self.timeout, context=self.context)
+            except urllib.error.HTTPError as e:
+                if e.code in (400, 403, 404, 405, 501):
+                    req = urllib.request.Request(self.url, **self.requestArgs)
+                    urlObj = urllib.request.urlopen(req, timeout=self.timeout, context=self.context)
+                else:
+                    raise
         except (urllib.error.HTTPError, urllib.error.URLError, socket.timeout) as e:
             self.errors.append(e)
             if self.mirrors:
                 self.logger.info(f"{e} Trying next mirror...")
                 self.url = self.mirrors.pop(0)
                 self.logger.info(f'Using url {self.url}')
+                self.threads_count = self._orig_threads_count if utils.is_HTTPRange_supported(self.url, timeout=self.timeout) else 1
                 self.start(blocking, _internal=_internal)
                 return
             elif (
@@ -353,6 +362,10 @@ class SmartDL:
     def retry(self, eStr=""):
         if self._killed:
             return
+        if self.mirrors:
+            self.current_attemp = 1
+            self.try_next_mirror(urllib.error.HTTPError(self.url, 0, eStr, {}, StringIO()) if eStr else None)
+            return
         if self.current_attemp < self.attemps_limit:
             self.current_attemp += 1
             if "429" in eStr or "416" in eStr:
@@ -379,6 +392,7 @@ class SmartDL:
             self.shared_var.value = 0
             self.url = self.mirrors.pop(0)
             self.logger.info(f'Using url "{self.url}"')
+            self.threads_count = self._orig_threads_count if utils.is_HTTPRange_supported(self.url, timeout=self.timeout) else 1
             self.start(blocking=False, _internal=True)
         else:
             self._failed = True
