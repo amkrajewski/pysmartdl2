@@ -25,17 +25,18 @@ class TestSmartDL(unittest.TestCase):
         ]
         self.res_7za920_hash = '2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac'
         self.res_testfile_1gb = [
+            'https://mirror.nforce.com/pub/speedtests/1000mb.bin',
+            'https://ftp.bit.nl/speedtest/1000mb.bin',
+            'http://ipv4.download.thinkbroadband.com/1GB.zip',
+            'https://cachefly.cachefly.net/100mb.test',
             'https://proof.ovh.net/files/1Gb.dat',
-            'https://ash-speed.hetzner.com/1GB.bin',
-            'https://fsn1-speed.hetzner.com/1GB.bin',
-            'http://speedtest.tele2.net/1GB.zip',
         ]
         self.res_testfile_100mb = [
-            'https://proof.ovh.net/files/100Mb.dat',
-            'https://ash-speed.hetzner.com/100MB.bin',
-            'https://fsn1-speed.hetzner.com/100MB.bin',
             'https://cachefly.cachefly.net/100mb.test',
-            'http://speedtest.tele2.net/100MB.zip',
+            'https://mirror.nforce.com/pub/speedtests/100mb.bin',
+            'https://ftp.bit.nl/speedtest/100mb.bin',
+            'http://ipv4.download.thinkbroadband.com/100MB.zip',
+            'https://proof.ovh.net/files/100Mb.dat',
         ]
         self.enable_logging = "-vvv" in sys.argv
     
