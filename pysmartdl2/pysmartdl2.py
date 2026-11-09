@@ -114,6 +114,7 @@ class SmartDL:
         self.filesize = 0
         self.shared_var = multiprocessing.Value(c_int, 0)  # a ctypes var that counts the bytes already downloaded
         self.thread_shared_cmds = {}
+        self._speed_limit = -1
         self.status = "ready"
         self.verify_hash = False
         self._killed = False
@@ -350,32 +351,39 @@ class SmartDL:
         self.logger.exception(e[1])
         
     def retry(self, eStr=""):
+        if self._killed:
+            return
         if self.current_attemp < self.attemps_limit:
             self.current_attemp += 1
-            self.status = "ready"
+            if "429" in eStr or "416" in eStr:
+                self.threads_count = max(1, self.threads_count // 2)
+            if self.status != "paused":
+                self.status = "downloading"
             self.shared_var.value = 0
-            self.thread_shared_cmds = {}
-            self.start()
+            self.thread_shared_cmds.pop('stop', None)
+            self.start(blocking=False, _internal=True)
              
         else:
             s = 'The maximum retry attempts reached!'
             if eStr:
                 s += f" ({eStr})"
-            self.errors.append(urllib.error.HTTPError(self.url, "0", s, {}, StringIO()))
+            self.errors.append(urllib.error.HTTPError(self.url, 0, s, {}, StringIO()))
             self._failed = True
             
     def try_next_mirror(self, e=None):
         if self.mirrors:
             if e:
                 self.errors.append(e)
-            self.status = "ready"
+            if self.status != "paused":
+                self.status = "downloading"
             self.shared_var.value = 0
             self.url = self.mirrors.pop(0)
             self.logger.info(f'Using url "{self.url}"')
-            self.start()
+            self.start(blocking=False, _internal=True)
         else:
             self._failed = True
-            self.errors.append(e)
+            if e:
+                self.errors.append(e)
     
     def get_eta(self, human=False):
         '''
@@ -439,7 +447,10 @@ class SmartDL:
             return False
         if self.status == "finished":
             return True
-        return not self.post_threadpool_thread.is_alive()
+        return (
+            (not self.post_threadpool_thread or not self.post_threadpool_thread.is_alive())
+            and (not self.control_thread or not self.control_thread.is_alive())
+        )
 
     def isSuccessful(self):
         '''
@@ -497,9 +508,16 @@ class SmartDL:
             return
             
         while not self.isFinished():
-            time.sleep(0.1)
-        self.post_threadpool_thread.join()
-        self.control_thread.join()
+            if self.post_threadpool_thread and self.post_threadpool_thread.is_alive():
+                self.post_threadpool_thread.join(timeout=0.1)
+            elif self.control_thread and self.control_thread.is_alive():
+                self.control_thread.join(timeout=0.1)
+            else:
+                time.sleep(0.1)
+        if self.post_threadpool_thread:
+            self.post_threadpool_thread.join()
+        if self.control_thread:
+            self.control_thread.join()
         
         if self._failed and raise_exceptions:
             raise self.errors[-1]
@@ -541,6 +559,7 @@ class SmartDL:
         :param speed: Speed in bytes per download per second. Negative values will not limit the speed. Default is `-1`.
         :type speed: int
         '''
+        self._speed_limit = speed
         if self.status == "downloading":
             if speed == 0:
                 self.pause()
@@ -661,6 +680,7 @@ def post_threadpool_actions(pool, args, expected_filesize, SmartDLObj):
             SmartDLObj.logger.exception(exc)
             
         SmartDLObj.retry(str(pool.get_exception()))
+        return
        
     if SmartDLObj._failed:
         SmartDLObj.logger.warning("Task had errors. Exiting...")
@@ -668,7 +688,12 @@ def post_threadpool_actions(pool, args, expected_filesize, SmartDLObj):
         
     if expected_filesize:  # if not zero, expected filesize is known
         threads = len(args[0])
-        total_filesize = sum([os.path.getsize(x) for x in args[0]])
+        try:
+            total_filesize = sum([os.path.getsize(x) for x in args[0]])
+        except OSError as e:
+            SmartDLObj.logger.warning(str(e))
+            SmartDLObj.retry(str(e))
+            return
         diff = math.fabs(expected_filesize - total_filesize)
         
         # if the difference is more than 4*thread numbers (because a thread may download 4KB extra per thread because of NTFS's block size)
@@ -689,4 +714,4 @@ def post_threadpool_actions(pool, args, expected_filesize, SmartDLObj):
             SmartDLObj.logger.info('Hash verification succeeded.')
         else:
             SmartDLObj.logger.warning('Hash verification failed.')
-            SmartDLObj.try_next_mirror(HashFailedException(os.path.basename(dest_path), hash, SmartDLObj.hash_code))
+            SmartDLObj.try_next_mirror(HashFailedException(os.path.basename(dest_path), hash_, SmartDLObj.hash_code))
