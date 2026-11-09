@@ -18,7 +18,7 @@ import ssl
 
 from . import utils
 from .control_thread import ControlThread
-from .download import download
+from .download import download, CanceledException
 
 class HashFailedException(Exception):
     "Raised when hash check fails."
@@ -30,15 +30,6 @@ class HashFailedException(Exception):
         return f'HashFailedException({self.filename}, got {self.calculated_hash}, expected {self.needed_hash})'
     def __repr__(self):
         return f'<HashFailedException {self.filename}, got {self.calculated_hash}, expected {self.needed_hash}>'
-        
-class CanceledException(Exception):
-    "Raised when the job is canceled."
-    def __init__(self):
-        pass
-    def __str__(self):
-        return 'CanceledException'
-    def __repr__(self):
-        return "<CanceledException>"
 
 class SmartDL:
     '''
