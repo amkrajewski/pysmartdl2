@@ -88,20 +88,22 @@ def download(url,
                         raise CanceledException()
                     if 'pause' in thread_shared_cmds:
                         time.sleep(0.2)
+                        limitspeed_timestamp = time.time()
+                        limitspeed_filesize = filesize_dl
                         continue
-                    if 'limit' in thread_shared_cmds:
+                    if 'limit' in thread_shared_cmds and thread_shared_cmds['limit'] > 0:
                         now = time.time()
                         time_passed = now - limitspeed_timestamp
-                        if time_passed > 0.1:  # we only observe the limit after 100ms
-                            # if we passed the limit, we should
-                            if (filesize_dl-limitspeed_filesize)/time_passed >= thread_shared_cmds['limit']:
-                                time_to_sleep = (filesize_dl-limitspeed_filesize) / thread_shared_cmds['limit']
-                                logger.debug('Thread has downloaded {} in {}. Limit is {}/s. Slowing down...'.format(utils.sizeof_human(filesize_dl-limitspeed_filesize), utils.time_human(time_passed, fmt_short=True, show_ms=True), utils.sizeof_human(thread_shared_cmds['limit'])))
-                                time.sleep(time_to_sleep)
-                                continue
-                            else:
-                                limitspeed_timestamp = now
-                                limitspeed_filesize = filesize_dl
+                        expected_time = (filesize_dl - limitspeed_filesize) / thread_shared_cmds['limit']
+                        time_to_sleep = expected_time - time_passed
+                        if time_to_sleep >= 0.05:
+                            logger.debug('Thread has downloaded {} in {}. Limit is {}/s. Slowing down...'.format(utils.sizeof_human(filesize_dl-limitspeed_filesize), utils.time_human(time_passed, fmt_short=True, show_ms=True), utils.sizeof_human(thread_shared_cmds['limit'])))
+                            _interruptible_sleep(time_to_sleep, thread_shared_cmds, logger)
+                            limitspeed_timestamp += expected_time
+                            limitspeed_filesize = filesize_dl
+                        elif time_to_sleep < -1.0:
+                            limitspeed_timestamp = now
+                            limitspeed_filesize = filesize_dl
                     
                 try:
                     buff = urlObj.read(block_sz)
