@@ -6,9 +6,9 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/pysmartdl2?label=PyPI&color=green)](https://pypi.org/project/pysmartdl2)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/pysmartdl2)](https://pypi.org/project/pysmartdl2)
 
-This software is a fork of the `pySmartDL` or **Python Smart Download Manager** by iTaybb which appears to not be maintained anymore. I (1) went through its codebase to check if things work as expected in modern (Python 3.8-12+) versions of Python, (2) did some modernizing fixes here and there, (3) fixed broken test suites, (4) implemented automated testing workflows, and (4) restructured the package to modern standards (e.g., `pyproject.toml`). New features were added and bugs have been fixed, but original API is and _will_ be retained, so that you can treat it as a **drop-in replacement**. Enjoy!
+This software is a fork of the `pySmartDL` or **Python Smart Download Manager** by iTaybb which appears to not be maintained anymore. I (1) went through its codebase to check if things work as expected in modern (Python 3.8-14+) versions of Python, (2) did some modernizing fixes here and there, (3) fixed broken test suites, (4) implemented automated testing workflows, and (4) restructured the package to modern standards (e.g., `pyproject.toml`). New features were added and bugs have been fixed, but original API is and _will_ be retained, so that you can treat it as a **drop-in replacement**. Enjoy!
 
-Test suites go over all popular Python versions (Python 3.8 - 3.14) on all four platforms enabled by GitHub Action Runners: Linux (Ubuntu), MacOS (M1 CPU), and Windows. Live status is shown below.
+Test suites go over all popular Python versions (Python 3.9 - 3.14) on all four platforms enabled by GitHub Action Runners: Linux (Ubuntu), MacOS (M1 CPU), and Windows. Live status is shown below.
 
 [![Multi-OS Multi-Python Build](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Linux.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_Linux.yaml)
 [![Multi-OS Multi-Python Build2](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacM1.yaml/badge.svg)](https://github.com/amkrajewski/pysmartdl2/actions/workflows/test_MacM1.yaml)
