@@ -16,6 +16,7 @@ import multiprocessing.dummy as multiprocessing
 from ctypes import c_int
 import json
 import ssl
+import warnings
 
 from . import utils
 from .control_thread import ControlThread
@@ -97,8 +98,15 @@ class SmartDL:
         self.url = self.mirrors.pop(0)
         self.logger.info(f'Using url "{self.url}"')
 
-        raw_path = urllib.parse.unquote(urllib.parse.urlparse(self.url).path)
-        fn = os.path.basename(raw_path.replace("\\", "/"))
+        url_path = urllib.parse.urlparse(self.url).path
+        raw_path = urllib.parse.unquote(url_path).replace("\\", "/")
+        raw_fn = urllib.parse.unquote(os.path.basename(url_path))
+        fn = os.path.basename(raw_path)
+        if raw_fn != fn or ".." in raw_path.split("/"):
+            safe_fn = "download" if fn in ("", ".", "..") else fn
+            msg = f"Potentially malicious path traversal sequence detected in URL '{self.url}'. Sanitizing filename to '{safe_fn}'."
+            self.logger.warning(msg)
+            warnings.warn(msg, RuntimeWarning, stacklevel=2)
         if fn in ("", ".", ".."):
             fn = "download"
         self.dest = dest or os.path.join(tempfile.gettempdir(), 'pysmartdl', fn)

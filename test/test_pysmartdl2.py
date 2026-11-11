@@ -226,7 +226,8 @@ class TestSmartDL(unittest.TestCase):
                 ("http://127.0.0.1:1/files/..%5C..%5Cevil_file", "evil_file"),
                 ("http://127.0.0.1:1/files/..%2F..", "download"),
             ]:
-                obj = SmartDL(malicious_url, dest=self.dl_dir, progress_bar=False, timeout=1)
+                with self.assertWarns(RuntimeWarning):
+                    obj = SmartDL(malicious_url, dest=self.dl_dir, progress_bar=False, timeout=1)
                 self.assertEqual(os.path.realpath(obj.get_dest()), os.path.realpath(os.path.join(self.dl_dir, expected_fn)))
 
     def _test_calc_chunk_size(self, filesize, threads, minChunkFile):
