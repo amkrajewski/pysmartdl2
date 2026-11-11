@@ -97,9 +97,12 @@ class SmartDL:
         self.url = self.mirrors.pop(0)
         self.logger.info(f'Using url "{self.url}"')
 
-        fn = urllib.parse.unquote(os.path.basename(urllib.parse.urlparse(self.url).path))
+        raw_path = urllib.parse.unquote(urllib.parse.urlparse(self.url).path)
+        fn = os.path.basename(raw_path.replace("\\", "/"))
+        if fn in ("", ".", ".."):
+            fn = "download"
         self.dest = dest or os.path.join(tempfile.gettempdir(), 'pysmartdl', fn)
-        if self.dest[-1] == os.sep:
+        if self.dest[-1] in (os.sep, "/"):
             if os.path.exists(self.dest[:-1]) and os.path.isfile(self.dest[:-1]):
                 os.unlink(self.dest[:-1])
             self.dest += fn
