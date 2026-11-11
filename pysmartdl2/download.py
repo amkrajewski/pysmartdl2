@@ -68,8 +68,9 @@ def download(url,
     try:
         with open(dest, 'wb') as f:
             if endByte:
-                filesize = endByte-startByte
+                filesize = endByte - startByte + 1
             else:
+                filesize = 0
                 try:
                     meta = urlObj.info()
                     filesize = int(urlObj.headers["Content-Length"])
@@ -124,5 +125,7 @@ def download(url,
                 if shared_var:
                     shared_var.value += len(buff)
                 f.write(buff)
+                if filesize and filesize_dl >= filesize:
+                    break
     finally:
         urlObj.close()
