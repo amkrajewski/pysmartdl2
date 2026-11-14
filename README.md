@@ -2,7 +2,7 @@
 
 [![GitHub top language](https://img.shields.io/github/languages/top/amkrajewski/pysmartdl2)](https://github.com/amkrajewski/pysmartdl2)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pysmartdl2)](https://pypi.org/project/pysmartdl2)
-![GitHub License](https://img.shields.io/github/license/amkrajewski/pysmartdl2)
+![GitHub License](https://img.shields.io/badge/license-MIT-gold)
 [![PyPI - Version](https://img.shields.io/pypi/v/pysmartdl2?label=PyPI&color=green)](https://pypi.org/project/pysmartdl2)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/pysmartdl2)](https://pypi.org/project/pysmartdl2)
 
